@@ -1,10 +1,12 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, invalid_required_positional_param, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'card_reusable.dart';
 import 'constants.dart';
 import "icon_title_content.dart";
+import "results_page.dart";
+import "calculator_brain.dart";
 
 class InputPage extends StatefulWidget {
   const InputPage({Key? key}) : super(key: key);
@@ -20,22 +22,19 @@ class _InputPageState extends State<InputPage> {
   Color femaleCardColor = inactiveColur;
   double height = 120.0;
   int weight = 60;
+  int age = 18;
 
   void updateColor(Geneders geneder) {
     if (geneder == Geneders.Male) {
       if (maleCardColor == inactiveColur) {
         maleCardColor = activeColour;
         femaleCardColor = inactiveColur;
-      } else if (maleCardColor == activeColour) {
-        maleCardColor = inactiveColur;
       }
     }
     if (geneder == Geneders.Female) {
       if (femaleCardColor == inactiveColur) {
         femaleCardColor = activeColour;
         maleCardColor = inactiveColur;
-      } else if (femaleCardColor == activeColour) {
-        femaleCardColor = inactiveColur;
       }
     }
   }
@@ -135,20 +134,59 @@ class _InputPageState extends State<InputPage> {
             ),
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
             children: [
               Expanded(
                 child: boxLmfao(
                   activeColour,
                   Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         "WEIGHT",
                         style: labelTextStyle,
                       ),
-                      Text(
-                        weight.toString(),
-                        style: kNumberStyle,
-                      )
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
+                        children: [
+                          Text(
+                            weight.toString(),
+                            style: kNumberStyle,
+                          ),
+                          Text(
+                            "kg",
+                            style: labelTextStyle,
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          RoundIconButton(FontAwesomeIcons.minus, () {
+                            {
+                              setState(() {
+                                weight--;
+                              });
+                            }
+                            ;
+                          }),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          RoundIconButton(FontAwesomeIcons.plus, () {
+                            {
+                              setState(() {
+                                weight++;
+                              });
+                            }
+                            ;
+                          }),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -156,19 +194,106 @@ class _InputPageState extends State<InputPage> {
               Expanded(
                 child: boxLmfao(
                   activeColour,
-                  cardChild("MALE", FontAwesomeIcons.mars),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Age",
+                        style: labelTextStyle,
+                      ),
+                      Text(
+                        age.toString(),
+                        style: kNumberStyle,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          RoundIconButton(FontAwesomeIcons.minus, () {
+                            {
+                              setState(() {
+                                age--;
+                              });
+                            }
+                            ;
+                          }),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          RoundIconButton(FontAwesomeIcons.plus, () {
+                            {
+                              setState(() {
+                                age++;
+                              });
+                            }
+                            ;
+                          }),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
           ),
-          Container(
-            color: bottomContainerColor,
-            margin: EdgeInsets.only(top: 10),
-            width: double.infinity,
-            height: bottomContainerHeight,
-          ),
+          ReUsableButton(() {
+            calculator_brain brain = calculator_brain(height, weight, age);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return ResultsPage(brain);
+                },
+              ),
+            );
+          }, "Calculate"),
         ],
       ),
+    );
+  }
+}
+
+class ReUsableButton extends StatelessWidget {
+  ReUsableButton(@required this.onTap, @required this.buttonTitle);
+  final Function onTap;
+  final String buttonTitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => onTap(),
+      child: Container(
+        child: Center(
+          child: Text(
+            buttonTitle,
+            style: kLargeBottomText,
+          ),
+        ),
+        color: bottomContainerColor,
+        margin: EdgeInsets.only(top: 10),
+        width: double.infinity,
+        height: bottomContainerHeight,
+      ),
+    );
+  }
+}
+
+class RoundIconButton extends StatelessWidget {
+  RoundIconButton(@required this.icon, @required this.onPressed);
+  final IconData icon;
+  final Function onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return RawMaterialButton(
+      child: Icon(icon),
+      onPressed: () => onPressed(),
+      elevation: 6,
+      constraints: BoxConstraints.tightFor(
+        width: 56,
+        height: 56,
+      ),
+      shape: CircleBorder(),
+      fillColor: Color(0xFF4C4F5E),
     );
   }
 }

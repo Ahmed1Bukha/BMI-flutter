@@ -12,3 +12,11 @@ const kNumberStyle = TextStyle(
 
 const bottomContainerHeight = 60.0;
 const bottomContainerColor = Color(0xFFEB1555);
+const kLargeBottomText = TextStyle(fontSize: 25, fontWeight: FontWeight.bold);
+
+const kTitleText = TextStyle(fontSize: 50, fontWeight: FontWeight.bold);
+
+const kResultTextStyle =
+    TextStyle(color: Colors.green, fontSize: 22, fontWeight: FontWeight.bold);
+
+const kBMIText = TextStyle(fontSize: 100, fontWeight: FontWeight.bold);
